@@ -5,6 +5,10 @@ import com.semihsahinoglu.crypto_app.candle.entity.Candle;
 import com.semihsahinoglu.crypto_app.candle.repository.CandleRepository;
 import com.semihsahinoglu.crypto_app.candle.service.IndicatorService;
 import com.semihsahinoglu.crypto_app.signal.entity.Signal;
+import com.semihsahinoglu.crypto_app.signal.entity.SignalEntity;
+import com.semihsahinoglu.crypto_app.signal.mapper.SignalMapper;
+import com.semihsahinoglu.crypto_app.signal.repository.SignalRepository;
+import com.semihsahinoglu.crypto_app.telegram.service.TelegramService;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -16,11 +20,17 @@ public class SignalService {
     private final CandleRepository candleRepository;
     private final IndicatorService indicatorService;
     private final StrategyService strategyService;
+    private final SignalRepository signalRepository;
+    private final SignalMapper signalMapper;
+    private final TelegramService telegramService;
 
-    public SignalService(CandleRepository candleRepository, IndicatorService indicatorService, StrategyService strategyService) {
+    public SignalService(CandleRepository candleRepository, IndicatorService indicatorService, StrategyService strategyService, SignalRepository signalRepository, SignalMapper signalMapper, TelegramService telegramService) {
         this.candleRepository = candleRepository;
         this.indicatorService = indicatorService;
         this.strategyService = strategyService;
+        this.signalRepository = signalRepository;
+        this.signalMapper = signalMapper;
+        this.telegramService = telegramService;
     }
 
     public Signal getSignal(String symbol, String interval) {
@@ -35,6 +45,33 @@ public class SignalService {
 
         double currentPrice = candles.get(candles.size() - 1).getClose().doubleValue();
 
-        return strategyService.generateSignal(indicators, currentPrice);
+        Signal signal = strategyService.generateSignal(indicators, currentPrice, candles);
+
+        SignalEntity signalEntity = signalMapper.toEntity(signal, indicators, symbol, interval, currentPrice);
+
+        SignalEntity savedEntity = signalRepository.save(signalEntity);
+
+        String message = """
+                🚨 KRIPTO SIGNAL
+                
+                Coin: %s
+                Type: %s
+                Price: %.2f
+                Confidence: %d
+                
+                Reason:
+                %s
+                """
+                .formatted(
+                        symbol,
+                        signal.type(),
+                        currentPrice,
+                        signal.confidence(),
+                        signal.reason()
+                );
+
+        telegramService.sendMessage(message);
+
+        return signal;
     }
 }

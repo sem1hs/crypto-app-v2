@@ -13,4 +13,6 @@ public interface CandleRepository extends CrudRepository<Candle, UUID> {
     boolean existsBySymbolAndIntervalAndOpenTime(String symbol, String interval, Long openTime);
 
     List<Candle> findTop100BySymbolAndIntervalOrderByOpenTimeDesc(String symbol, String interval);
+
+    List<Candle> findBySymbolAndIntervalOrderByOpenTimeAsc(String symbol, String interval);
 }

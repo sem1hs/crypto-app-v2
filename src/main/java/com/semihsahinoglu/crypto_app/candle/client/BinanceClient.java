@@ -3,6 +3,7 @@ package com.semihsahinoglu.crypto_app.candle.client;
 import com.semihsahinoglu.crypto_app.candle.entity.BinanceProperties;
 import com.semihsahinoglu.crypto_app.candle.entity.Candle;
 import com.semihsahinoglu.crypto_app.candle.mapper.CandleMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -17,7 +18,7 @@ public class BinanceClient {
     private final BinanceProperties binanceProperties;
     private final CandleMapper candleMapper;
 
-    public BinanceClient(WebClient webClient, BinanceProperties binanceProperties, CandleMapper candleMapper) {
+    public BinanceClient(@Qualifier("binanceWebClient") WebClient webClient, BinanceProperties binanceProperties, CandleMapper candleMapper) {
         this.webClient = webClient;
         this.binanceProperties = binanceProperties;
         this.candleMapper = candleMapper;

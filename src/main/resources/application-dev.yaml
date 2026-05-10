@@ -22,6 +22,13 @@ binance:
 
   app:
     trading:
-      symbol: BTCUSDT
+      symbol: BTCTRY
       interval: 5m
       limit: 100
+
+telegram:
+  bot:
+    token: 8763168670:AAG8lae2MkP1y_ZSPK7v-EvCsXcIapuSf5U
+
+  chat:
+    id: 6717861326
