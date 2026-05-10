@@ -52,21 +52,38 @@ public class SignalService {
         SignalEntity savedEntity = signalRepository.save(signalEntity);
 
         String message = """
-                🚨 KRIPTO SIGNAL
-                
-                Coin: %s
-                Type: %s
-                Price: %.2f
-                Confidence: %d
-                
-                Reason:
-                %s
-                """
+            🚨 KRIPTO SIGNAL
+            
+            Coin: %s
+            Type: %s
+            Price: %.2f
+            Confidence: %d
+            
+            📊 Indicators
+            
+            RSI: %.2f
+            EMA50: %.2f
+            Avg Volume: %.2f
+            Volume Increasing: %s
+            Support: %.2f
+            Resistance: %.2f
+            
+            🧠 Reason:
+            %s
+            """
                 .formatted(
                         symbol,
                         signal.type(),
                         currentPrice,
                         signal.confidence(),
+
+                        indicators.rsi(),
+                        indicators.ema50(),
+                        indicators.avgVolume(),
+                        indicators.volumeIncreasing(),
+                        indicators.support(),
+                        indicators.resistance(),
+
                         signal.reason()
                 );
 
