@@ -11,5 +11,14 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  backend:
+    image: crypto-app-backend:latest
+    container_name: backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   postgres_data:
