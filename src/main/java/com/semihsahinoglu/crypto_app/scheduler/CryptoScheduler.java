@@ -16,7 +16,7 @@ public class CryptoScheduler {
         this.signalService = signalService;
     }
 
-    @Scheduled(cron = "0 */20 * * * *")
+    @Scheduled(cron = "0 */10 * * * *")
     public void run() {
 
         System.out.println("Scheduler çalıştı");
