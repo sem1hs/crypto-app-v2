@@ -1,5 +1,5 @@
 # BUILD STAGE
-FROM gradle:8.7-jdk25 AS build
+FROM gradle:jdk25-ubi AS build
 
 WORKDIR /app
 
